@@ -5,42 +5,37 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 
 public class MainGameScreen implements Screen {
 
     public static final float SPEED = 60;
-    public static final float ANIMATION_SPEED=0.5f;
 
     private Texture sky;
     private Texture road;
     private Texture fence;
     private float stateTime;
+    AnimationPerso animationPerso;
+    DesertGame game;
 
-    Animation[] rolls;
-
-    private Texture imgCaracter1;
 
 
     private float x = 15;
     private float y = 30;
 
-    DesertGame game;
-
     public MainGameScreen(DesertGame game)
     {
         this.game=game;
-
-        rolls = new Animation[7];
     }
 
     @Override
     public void show() {
-        imgCaracter1 = new Texture("AnimationPerso/cour_0.png");
         sky = new Texture("Bright/sky.png");
         road = new Texture("Bright/road.png");
         fence = new Texture("Bright/fence.png");
+        animationPerso = new AnimationPerso();
+        animationPerso.create();
+
     }
 
     @Override
@@ -52,8 +47,15 @@ public class MainGameScreen implements Screen {
         game.batch.draw(sky,0,0);
         game.batch.draw(road,0,0,1600,350);
 
-       //game.batch.draw(rolls[2].getKeyFrame(stateTime,false),x,y,CARCATER_WIDHT_PIXEL,CARCATER_HEIGHT_PIXEL);
-        game.batch.draw(imgCaracter1,x,y);
+        if(moveToTheRight()){
+            game.batch.draw(animationPerso.walkAnimationRight(Gdx.graphics.getDeltaTime()) ,x,y);
+        }
+        else if(moveTotheLeft()){
+            game.batch.draw(animationPerso.walkAnimationLeft(Gdx.graphics.getDeltaTime()) ,x,y);
+        }else{
+            game.batch.draw(animationPerso.imobileAnimation(Gdx.graphics.getDeltaTime()) ,x,y);
+        }
+
         game.batch.draw(fence,Gdx.graphics.getWidth()/2,50,300,150);
         moveTest();
         echapToucheTouched();
@@ -99,25 +101,29 @@ public class MainGameScreen implements Screen {
         }
     }
 
-    private void moveTotheLeft() {
+    private boolean moveTotheLeft() {
         if(Gdx.input.isKeyPressed(Input.Keys.A))
         {
             x-= SPEED *Gdx.graphics.getDeltaTime();
+            return true;
         }
         else
         {
             x=x;
+            return false;
         }
     }
 
-    private void moveToTheRight() {
+    private boolean moveToTheRight() {
         if(Gdx.input.isKeyPressed(Input.Keys.D))
         {
             x+= SPEED *Gdx.graphics.getDeltaTime();
+            return true;
         }
         else
         {
             x=x;
+            return false;
         }
     }
 
