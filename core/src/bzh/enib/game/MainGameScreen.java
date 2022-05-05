@@ -10,13 +10,19 @@ import com.badlogic.gdx.graphics.Texture;
 public class MainGameScreen implements Screen {
 
     public static final float CARACTER_SPEED = 160;
+    public static final float BACKGROND_SPEED1 = CARACTER_SPEED/4;
     private static final int SCREE_HEIGH =1000;
     private static final int SCREE_WITHD =1600;
+    private static final int FIRST_PLAN_HEIGHT =500;
+    private static final int FIRST_WIDHT =600;
 
     private Texture skySunBackground;
     private Texture skyBackground;
     private Texture road;
     private Texture fence;
+    private Texture trees;
+    private Texture houseFountain;
+    private Texture house;
     private float stateTime;
     AnimationPerso animationPerso;
     DesertGame game;
@@ -26,7 +32,9 @@ public class MainGameScreen implements Screen {
     private float x = 600;
     private float y = 40;
     private float backgroundX =0;
-
+    private float FirstPlanX =0;
+    private float SecondPlanX =0;
+    private float ThirdPlanX =0;
 
     public MainGameScreen(DesertGame game)
     {
@@ -39,6 +47,9 @@ public class MainGameScreen implements Screen {
         skyBackground = new Texture("Bright/sky.png");
         road = new Texture("Bright/road.png");
         fence = new Texture("Bright/fence.png");
+        trees = new Texture("Bright/trees.png");
+        houseFountain = new Texture("Bright/house&fountain.png");
+        house = new Texture("Bright/houses2.png");
         animationPerso = new AnimationPerso();
         animationPerso.create();
 
@@ -54,18 +65,83 @@ public class MainGameScreen implements Screen {
 
 
         drawMainBackground();
-
-        game.batch.draw(road,0,0,SCREE_WITHD,350);
-
+        drawSecondPlan();
+        drawFirstPlan();
         drawCaracterAnimation();//affiche perso méthode importante lol
-
-        game.batch.draw(fence,Gdx.graphics.getWidth()/2,50,300,150);
 
 
         echapToucheTouched();
         game.batch.end();
 
 
+    }
+
+    private void drawSecondPlan() {
+        if(x>300 && x<1300)
+        {
+            game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
+            game.batch.draw(house, ThirdPlanX+ 500,0,SCREE_WITHD/3,400);
+
+        }else if(x<300){
+            game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
+            game.batch.draw(house, ThirdPlanX+500,0,SCREE_WITHD/3,400);
+            if(moveTotheLeft()){
+                SecondPlanX += CARACTER_SPEED/2 *Gdx.graphics.getDeltaTime();
+                ThirdPlanX += CARACTER_SPEED/3 *Gdx.graphics.getDeltaTime();
+            }
+        }else if(x>1300){
+            if(moveToTheRight()){
+                SecondPlanX -= CARACTER_SPEED/2 *Gdx.graphics.getDeltaTime();
+                ThirdPlanX -= CARACTER_SPEED/3 *Gdx.graphics.getDeltaTime();
+            }
+            game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
+            game.batch.draw(house, ThirdPlanX+500,0,SCREE_WITHD/3,400);
+        }
+        game.batch.draw(houseFountain, SecondPlanX -SCREE_WITHD,0,SCREE_WITHD/3,400);
+        game.batch.draw(houseFountain, SecondPlanX +SCREE_WITHD,0,SCREE_WITHD/3,400);
+        game.batch.draw(house, ThirdPlanX -SCREE_WITHD,0,SCREE_WITHD/3,400);
+        game.batch.draw(house, ThirdPlanX +SCREE_WITHD,0,SCREE_WITHD/3,400);
+
+    }
+
+    private void drawFirstPlan() {
+        if(x>300 && x<1300)
+        {
+            game.batch.draw(road, FirstPlanX,0,SCREE_WITHD,350);
+            drawTreesFirstPlan();
+            game.batch.draw(fence, FirstPlanX,50,300,FIRST_PLAN_HEIGHT/2);
+            game.batch.draw(fence, FirstPlanX + FIRST_PLAN_HEIGHT,50,300,FIRST_PLAN_HEIGHT/2);
+        }else if(x<300){
+            game.batch.draw(road, FirstPlanX,0,SCREE_WITHD,350);
+            drawTreesFirstPlan();
+            game.batch.draw(fence, FirstPlanX,50,300,FIRST_PLAN_HEIGHT/2);
+            game.batch.draw(fence, FirstPlanX + FIRST_PLAN_HEIGHT,50,300,FIRST_PLAN_HEIGHT/2);
+            if(moveTotheLeft()){
+                FirstPlanX += CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+            }
+        }else if(x>1300){
+            if(moveToTheRight()){
+                FirstPlanX -= CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+            }
+            game.batch.draw(road, FirstPlanX,0,SCREE_WITHD,350);
+            drawTreesFirstPlan();
+            game.batch.draw(fence, FirstPlanX,50,300,FIRST_PLAN_HEIGHT/2);
+            game.batch.draw(fence, FirstPlanX + FIRST_PLAN_HEIGHT,50,300,FIRST_PLAN_HEIGHT/2);
+
+        }
+        game.batch.draw(road, FirstPlanX -SCREE_WITHD,0,SCREE_WITHD,350);
+        game.batch.draw(road, FirstPlanX +SCREE_WITHD,0,SCREE_WITHD,350);
+    }
+
+    private void drawTreesFirstPlan() {
+        game.batch.draw(trees, FirstPlanX,50,FIRST_WIDHT,FIRST_PLAN_HEIGHT);
+        game.batch.draw(trees, FirstPlanX +FIRST_WIDHT,50,FIRST_WIDHT,FIRST_PLAN_HEIGHT);
+        game.batch.draw(trees, FirstPlanX + 2*FIRST_WIDHT,50,FIRST_WIDHT,FIRST_PLAN_HEIGHT);
+        game.batch.draw(trees, FirstPlanX + 3*FIRST_WIDHT,50,FIRST_WIDHT,FIRST_PLAN_HEIGHT);
+        game.batch.draw(trees, FirstPlanX + 4*FIRST_WIDHT,50,FIRST_WIDHT,FIRST_PLAN_HEIGHT);
+        game.batch.draw(trees, FirstPlanX - FIRST_WIDHT,50,600,FIRST_PLAN_HEIGHT);
+        game.batch.draw(trees, FirstPlanX - 2*FIRST_WIDHT,50,600,FIRST_PLAN_HEIGHT);
+        game.batch.draw(trees, FirstPlanX - 3*FIRST_WIDHT,50,600,FIRST_PLAN_HEIGHT);
     }
 
     private void drawMainBackground() {
@@ -75,11 +151,11 @@ public class MainGameScreen implements Screen {
         }else if(x<300){
             game.batch.draw(skySunBackground,backgroundX,0,SCREE_WITHD,SCREE_HEIGH);
             if(moveTotheLeft()){
-                backgroundX += CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+                backgroundX += BACKGROND_SPEED1 *Gdx.graphics.getDeltaTime();
             }
         }else if(x>1300){
             if(moveToTheRight()){
-                backgroundX -= CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+                backgroundX -= BACKGROND_SPEED1 *Gdx.graphics.getDeltaTime();
             }
             game.batch.draw(skySunBackground,backgroundX,0,SCREE_WITHD,SCREE_HEIGH);
 
