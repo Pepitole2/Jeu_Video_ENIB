@@ -6,8 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.awt.*;
-
 
 public class MainGameScreen implements Screen {
 
@@ -18,8 +16,6 @@ public class MainGameScreen implements Screen {
     private static final int FIRST_PLAN_HEIGHT =500;
     private static final int FIRST_WIDHT =600;
 
-    private Rectangle boxe;
-    private Texture boxeTexture;
     private Texture skySunBackground;
     private Texture skyBackground;
     private Texture road;
@@ -31,7 +27,7 @@ public class MainGameScreen implements Screen {
     AnimationPerso animationPerso;
     DesertGame game;
 
-
+    private BoxeGenerator boxetest;
 
     private float x = 600;
     private float y = 40;
@@ -54,14 +50,9 @@ public class MainGameScreen implements Screen {
         trees = new Texture("Bright/trees.png");
         houseFountain = new Texture("Bright/house&fountain.png");
         house = new Texture("Bright/houses2.png");
-        boxeTexture = new Texture("Bright/texture-caisse.jpeg");
-        boxe = new Rectangle();
-        boxe.x = SCREE_WITHD/2- 64/2;
-        boxe.y = 350;
-        boxe.width = 64;
-        boxe.height = 64;
         animationPerso = new AnimationPerso();
         animationPerso.create();
+        boxetest = new BoxeGenerator();
 
     }
 
@@ -78,17 +69,28 @@ public class MainGameScreen implements Screen {
         drawSecondPlan();
         drawFirstPlan();
         drawCaracterAnimation();//affiche perso méthode importante lol
-        game.batch.draw(boxeTexture,boxe.x,boxe.y,boxe.width,boxe.height);
-
+        drawBoxes();
 
         echapToucheTouched();
         game.batch.end();
-
-
     }
 
+    private void drawBoxes()
+    {
+        int localVarX =boxetest.getX();
+        if(isOntheMap())
+        {
+            game.batch.draw(boxetest.getTexture(),localVarX,boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
+        }else if(x<300) {
+            localVarX += CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+            game.batch.draw(boxetest.getTexture(),localVarX,boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
+        }
+    }
+
+
+
     private void drawSecondPlan() {
-        if(x>300 && x<1300){
+        if(isOntheMap()){
             game.batch.draw(house, ThirdPlanX+ 500,0,SCREE_WITHD/3,400);
             game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
         }else if(x<300){
@@ -115,8 +117,12 @@ public class MainGameScreen implements Screen {
 
     }
 
+    private boolean isOntheMap() {
+        return x > 300 && x < 1300;
+    }
+
     private void drawFirstPlan() {
-        if(x>300 && x<1300)
+        if(isOntheMap())
         {
             game.batch.draw(road, FirstPlanX,0,SCREE_WITHD,350);
             drawTreesFirstPlan();
@@ -156,7 +162,7 @@ public class MainGameScreen implements Screen {
     }
 
     private void drawMainBackground() {
-        if(x>300 && x<1300)
+        if(isOntheMap())
         {
             game.batch.draw(skySunBackground,backgroundX,0,SCREE_WITHD,SCREE_HEIGH);
         }else if(x<300){

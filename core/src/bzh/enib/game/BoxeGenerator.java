@@ -4,13 +4,15 @@ import com.badlogic.gdx.graphics.Texture;
 
 import java.awt.*;
 
-public class BoxeGenerator {
+public class BoxeGenerator extends ItemGenerator {
 
-    private Rectangle collision;
-    private Texture texture;
+    private static final int BOXE_WITDH =50;
+    private static final int BOXE_HEIGHT =50;
 
     public BoxeGenerator()
     {
-
+        super(new Texture("Bright/texture-caisse.jpeg"),BOXE_WITDH,BOXE_HEIGHT,300,50);
     }
+
+
 }

@@ -6,49 +6,69 @@ import java.awt.*;
 
 public class ItemGenerator {
 
-    private Texture itemTexture;
-    private Rectangle itemSurface;
+    private Texture texture;
+    private Rectangle collision;
+    private int width, height;
     private int x,y;
-    private int sizeX,sizeY;
 
-    public ItemGenerator(Texture itemTexture,int sizeX,int sizeY)
-    {
-        this.itemTexture =itemTexture;
-        this.sizeX=sizeX;
-        this.sizeY=sizeY;
-        this.x=x;
-        this.y=y;
+    public ItemGenerator(Texture texture, int width, int height, int x, int y){
+        this.texture=texture;
+        this.width = width;
+        this.height = height;
+        this.x =x;
+        this.y =y;
+        this.collision = new Rectangle();
+        collision.x = x;
+        collision.y =y;
+        collision.width = width;
+        collision.height = height;
     }
 
-    private Rectangle spawnItem()
-    {
-        itemSurface = new Rectangle();
-        itemSurface.width = sizeX;
-        itemSurface.height = sizeY;
-        return itemSurface;
+    public Texture getTexture() {
+        return texture;
     }
 
-    public Texture getItemTexture() {
-        return itemTexture;
+    public void setTexture(Texture texture) {
+        this.texture = texture;
     }
 
-    public void setItemTexture(Texture itemTexture) {
-        this.itemTexture = itemTexture;
+    public Rectangle getCollision() {
+        return collision;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setCollision(Rectangle collision) {
+        this.collision = collision;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public int getX() {
         return x;
     }
 
-    public int getY(){
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
         return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
