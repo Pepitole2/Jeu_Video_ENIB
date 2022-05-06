@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
+import java.awt.*;
+
 
 public class MainGameScreen implements Screen {
 
@@ -16,6 +18,8 @@ public class MainGameScreen implements Screen {
     private static final int FIRST_PLAN_HEIGHT =500;
     private static final int FIRST_WIDHT =600;
 
+    private Rectangle boxe;
+    private Texture boxeTexture;
     private Texture skySunBackground;
     private Texture skyBackground;
     private Texture road;
@@ -50,6 +54,12 @@ public class MainGameScreen implements Screen {
         trees = new Texture("Bright/trees.png");
         houseFountain = new Texture("Bright/house&fountain.png");
         house = new Texture("Bright/houses2.png");
+        boxeTexture = new Texture("Bright/texture-caisse.jpeg");
+        boxe = new Rectangle();
+        boxe.x = SCREE_WITHD/2- 64/2;
+        boxe.y = 350;
+        boxe.width = 64;
+        boxe.height = 64;
         animationPerso = new AnimationPerso();
         animationPerso.create();
 
@@ -68,6 +78,7 @@ public class MainGameScreen implements Screen {
         drawSecondPlan();
         drawFirstPlan();
         drawCaracterAnimation();//affiche perso méthode importante lol
+        game.batch.draw(boxeTexture,boxe.x,boxe.y,boxe.width,boxe.height);
 
 
         echapToucheTouched();
@@ -77,16 +88,14 @@ public class MainGameScreen implements Screen {
     }
 
     private void drawSecondPlan() {
-        if(x>300 && x<1300)
-        {
-            game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
+        if(x>300 && x<1300){
             game.batch.draw(house, ThirdPlanX+ 500,0,SCREE_WITHD/3,400);
-
-        }else if(x<300){
             game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
+        }else if(x<300){
             game.batch.draw(house, ThirdPlanX+500,0,SCREE_WITHD/3,400);
+            game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
             if(moveTotheLeft()){
-                SecondPlanX += CARACTER_SPEED/2 *Gdx.graphics.getDeltaTime();
+                SecondPlanX += CARACTER_SPEED/4 *Gdx.graphics.getDeltaTime();
                 ThirdPlanX += CARACTER_SPEED/3 *Gdx.graphics.getDeltaTime();
             }
         }else if(x>1300){
@@ -94,13 +103,15 @@ public class MainGameScreen implements Screen {
                 SecondPlanX -= CARACTER_SPEED/2 *Gdx.graphics.getDeltaTime();
                 ThirdPlanX -= CARACTER_SPEED/3 *Gdx.graphics.getDeltaTime();
             }
-            game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
             game.batch.draw(house, ThirdPlanX+500,0,SCREE_WITHD/3,400);
+            game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
+
         }
-        game.batch.draw(houseFountain, SecondPlanX -SCREE_WITHD,0,SCREE_WITHD/3,400);
-        game.batch.draw(houseFountain, SecondPlanX +SCREE_WITHD,0,SCREE_WITHD/3,400);
         game.batch.draw(house, ThirdPlanX -SCREE_WITHD,0,SCREE_WITHD/3,400);
         game.batch.draw(house, ThirdPlanX +SCREE_WITHD,0,SCREE_WITHD/3,400);
+        game.batch.draw(houseFountain, SecondPlanX -SCREE_WITHD,0,SCREE_WITHD/3,400);
+        game.batch.draw(houseFountain, SecondPlanX +SCREE_WITHD,0,SCREE_WITHD/3,400);
+
 
     }
 

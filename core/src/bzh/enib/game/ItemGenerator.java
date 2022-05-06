@@ -6,19 +6,35 @@ import java.awt.*;
 
 public class ItemGenerator {
 
-    private Texture texture;
+    private Texture itemTexture;
     private Rectangle itemSurface;
     private int x,y;
     private int sizeX,sizeY;
 
-    public ItemGenerator(Texture texture,int sizeX,int sizeY)
+    public ItemGenerator(Texture itemTexture,int sizeX,int sizeY)
     {
-        this.texture=texture;
+        this.itemTexture =itemTexture;
         this.sizeX=sizeX;
         this.sizeY=sizeY;
-        itemSurface = new Rectangle();
+        this.x=x;
+        this.y=y;
     }
 
+    private Rectangle spawnItem()
+    {
+        itemSurface = new Rectangle();
+        itemSurface.width = sizeX;
+        itemSurface.height = sizeY;
+        return itemSurface;
+    }
+
+    public Texture getItemTexture() {
+        return itemTexture;
+    }
+
+    public void setItemTexture(Texture itemTexture) {
+        this.itemTexture = itemTexture;
+    }
 
     public void setX(int x) {
         this.x = x;
