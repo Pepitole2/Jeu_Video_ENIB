@@ -77,13 +77,13 @@ public class MainGameScreen implements Screen {
 
     private void drawBoxes()
     {
-        int localVarX =boxetest.getX();
         if(isOntheMap())
         {
-            game.batch.draw(boxetest.getTexture(),localVarX,boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
+            game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
         }else if(x<300) {
-            localVarX += CARACTER_SPEED *Gdx.graphics.getDeltaTime();
-            game.batch.draw(boxetest.getTexture(),localVarX,boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
+            game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX()+CARACTER_SPEED*Gdx.graphics.getDeltaTime(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
+        }else if(x>1300){
+            game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX()-CARACTER_SPEED*Gdx.graphics.getDeltaTime(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
         }
     }
 
