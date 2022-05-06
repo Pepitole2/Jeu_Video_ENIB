@@ -21,6 +21,8 @@ public class MainMenuScreen implements Screen {
     private Texture exitButtonDesactive;
     private Texture playButtonActive;
     private Texture playButtonDesactive;
+    private Texture backgroundMainScreen;
+
 
     public MainMenuScreen(DesertGame game)
     {
@@ -30,6 +32,7 @@ public class MainMenuScreen implements Screen {
         playButtonDesactive = new Texture("playDesactiveButton.png");
         exitButtonActive = new Texture("exitActiveButton.png");
         exitButtonDesactive = new Texture("exitDesactiveButton.png");
+        backgroundMainScreen = new Texture("backgroundMainmenu.png");
     }
     @Override
     public void show() {
@@ -42,6 +45,9 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClearColor(0,0,1,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
+
+        game.batch.draw(backgroundMainScreen,0,0,1600,1000);
+
 
         playButtonActivation(xButton, yPlayButton);
         exitButtonActivation(xButton,yExitButton);
