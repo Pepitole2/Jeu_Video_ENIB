@@ -3,8 +3,10 @@ package bzh.enib.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
 public class MainGameScreen implements Screen {
@@ -15,6 +17,8 @@ public class MainGameScreen implements Screen {
     private static final int SCREE_WITHD =1600;
     private static final int FIRST_PLAN_HEIGHT =500;
     private static final int FIRST_WIDHT =600;
+    private static final int RIGHT_BORDER = 1300;
+    private static final int LEFT_BORDER = 300;
 
     private Texture skySunBackground;
     private Texture skyBackground;
@@ -26,10 +30,15 @@ public class MainGameScreen implements Screen {
     private float stateTime;
     AnimationPerso animationPerso;
     DesertGame game;
+    private ShapeRenderer shapeRenderer;
+
+
+    private CaracterGenerator mainCaracter;
+    private int xMainCaracter;
 
     private BoxeGenerator boxetest;
 
-    private float x = 600;
+
     private float y = 40;
     private float backgroundX =0;
     private float FirstPlanX =0;
@@ -43,6 +52,7 @@ public class MainGameScreen implements Screen {
 
     @Override
     public void show() {
+        shapeRenderer = new ShapeRenderer();
         skySunBackground = new Texture("Bright/sky_sun.png");
         skyBackground = new Texture("Bright/sky.png");
         road = new Texture("Bright/road.png");
@@ -50,10 +60,9 @@ public class MainGameScreen implements Screen {
         trees = new Texture("Bright/trees.png");
         houseFountain = new Texture("Bright/house&fountain.png");
         house = new Texture("Bright/houses2.png");
-        animationPerso = new AnimationPerso();
-        animationPerso.create();
         boxetest = new BoxeGenerator();
-
+        mainCaracter = new CaracterGenerator();
+        xMainCaracter = mainCaracter.getX();
     }
 
     @Override
@@ -64,15 +73,53 @@ public class MainGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
 
-
         drawMainBackground();
         drawSecondPlan();
         drawFirstPlan();
-        drawCaracterAnimation();//affiche perso méthode importante lol
         drawBoxes();
-
+        drawMainCaracter();
         echapToucheTouched();
+
         game.batch.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        mainCaracter.healthBare.draw(shapeRenderer);
+        shapeRenderer.end();
+
+        testTakeCareTakeDamage();
+
+        //Parti a compléter
+        if(mainCaracter.ifDied())
+        {
+            this.dispose();
+            game.setScreen(new MainMenuScreen(game));
+        }
+
+    }
+
+    private void testTakeCareTakeDamage() {
+        if(Gdx.input.isKeyPressed(Input.Keys.T))
+        {
+            mainCaracter.takeDamage(1);
+            mainCaracter.healthBare.setWidth(mainCaracter.getHealth());
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.Y))
+        {
+            mainCaracter.takeCare(1);
+            mainCaracter.healthBare.setWidth(mainCaracter.getHealth());
+        }
+    }
+
+
+    private void drawMainCaracter() {
+        if(moveToTheRight()){
+            game.batch.draw(mainCaracter.getAnimationPerso().walkAnimationRight(Gdx.graphics.getDeltaTime()), xMainCaracter,y);
+        }
+        else if(moveTotheLeft()){
+            game.batch.draw(mainCaracter.getAnimationPerso().walkAnimationLeft(Gdx.graphics.getDeltaTime()), xMainCaracter,y);
+        }else{
+            game.batch.draw(mainCaracter.getAnimationPerso().imobileAnimation(Gdx.graphics.getDeltaTime()), xMainCaracter,y);
+        }
     }
 
     private void drawBoxes()
@@ -80,9 +127,9 @@ public class MainGameScreen implements Screen {
         if(isOntheMap())
         {
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
-        }else if(x<300) {
+        }else if(isOnTheLeftBorder()) {
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX()+CARACTER_SPEED*Gdx.graphics.getDeltaTime(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
-        }else if(x>1300){
+        }else if(isOnTheRightBorder()){
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX()-CARACTER_SPEED*Gdx.graphics.getDeltaTime(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
         }
     }
@@ -93,14 +140,14 @@ public class MainGameScreen implements Screen {
         if(isOntheMap()){
             game.batch.draw(house, ThirdPlanX+ 500,0,SCREE_WITHD/3,400);
             game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
-        }else if(x<300){
+        }else if(isOnTheLeftBorder()){
             game.batch.draw(house, ThirdPlanX+500,0,SCREE_WITHD/3,400);
             game.batch.draw(houseFountain, SecondPlanX,0,SCREE_WITHD/3,400);
             if(moveTotheLeft()){
                 SecondPlanX += CARACTER_SPEED/4 *Gdx.graphics.getDeltaTime();
                 ThirdPlanX += CARACTER_SPEED/3 *Gdx.graphics.getDeltaTime();
             }
-        }else if(x>1300){
+        }else if(isOnTheRightBorder()){
             if(moveToTheRight()){
                 SecondPlanX -= CARACTER_SPEED/2 *Gdx.graphics.getDeltaTime();
                 ThirdPlanX -= CARACTER_SPEED/3 *Gdx.graphics.getDeltaTime();
@@ -118,7 +165,7 @@ public class MainGameScreen implements Screen {
     }
 
     private boolean isOntheMap() {
-        return x > 300 && x < 1300;
+        return mainCaracter.getX() > 300 && mainCaracter.getX() < 1300;
     }
 
     private void drawFirstPlan() {
@@ -128,7 +175,7 @@ public class MainGameScreen implements Screen {
             drawTreesFirstPlan();
             game.batch.draw(fence, FirstPlanX,50,300,FIRST_PLAN_HEIGHT/2);
             game.batch.draw(fence, FirstPlanX + FIRST_PLAN_HEIGHT,50,300,FIRST_PLAN_HEIGHT/2);
-        }else if(x<300){
+        }else if(isOnTheLeftBorder()){
             game.batch.draw(road, FirstPlanX,0,SCREE_WITHD,350);
             drawTreesFirstPlan();
             game.batch.draw(fence, FirstPlanX,50,300,FIRST_PLAN_HEIGHT/2);
@@ -136,7 +183,7 @@ public class MainGameScreen implements Screen {
             if(moveTotheLeft()){
                 FirstPlanX += CARACTER_SPEED *Gdx.graphics.getDeltaTime();
             }
-        }else if(x>1300){
+        }else if(isOnTheRightBorder()){
             if(moveToTheRight()){
                 FirstPlanX -= CARACTER_SPEED *Gdx.graphics.getDeltaTime();
             }
@@ -165,12 +212,12 @@ public class MainGameScreen implements Screen {
         if(isOntheMap())
         {
             game.batch.draw(skySunBackground,backgroundX,0,SCREE_WITHD,SCREE_HEIGH);
-        }else if(x<300){
+        }else if(isOnTheLeftBorder()){
             game.batch.draw(skySunBackground,backgroundX,0,SCREE_WITHD,SCREE_HEIGH);
             if(moveTotheLeft()){
                 backgroundX += BACKGROND_SPEED1 *Gdx.graphics.getDeltaTime();
             }
-        }else if(x>1300){
+        }else if(isOnTheRightBorder()){
             if(moveToTheRight()){
                 backgroundX -= BACKGROND_SPEED1 *Gdx.graphics.getDeltaTime();
             }
@@ -181,16 +228,14 @@ public class MainGameScreen implements Screen {
         game.batch.draw(skyBackground,backgroundX+SCREE_WITHD,0,SCREE_WITHD,SCREE_HEIGH);
     }
 
-    private void drawCaracterAnimation() {
-        if(moveToTheRight()){
-            game.batch.draw(animationPerso.walkAnimationRight(Gdx.graphics.getDeltaTime()) ,x,y);
-        }
-        else if(moveTotheLeft()){
-            game.batch.draw(animationPerso.walkAnimationLeft(Gdx.graphics.getDeltaTime()) ,x,y);
-        }else{
-            game.batch.draw(animationPerso.imobileAnimation(Gdx.graphics.getDeltaTime()) ,x,y);
-        }
+    private boolean isOnTheLeftBorder() {
+        return mainCaracter.getX() <= LEFT_BORDER;
     }
+
+    private boolean isOnTheRightBorder() {
+        return  mainCaracter.getX() >= RIGHT_BORDER;
+    }
+
 
     private void echapToucheTouched() {
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
@@ -200,47 +245,19 @@ public class MainGameScreen implements Screen {
         }
     }
 
-    private void moveTest() {
-        moveToTheRight();
-        moveTotheLeft();
-        moveToTheTop();
-        moveTotheDown();
-    }
-
-    private void moveTotheDown() {
-        if(Gdx.input.isKeyPressed(Input.Keys.W))
-        {
-            y+= CARACTER_SPEED *Gdx.graphics.getDeltaTime();
-        }
-        else
-        {
-            y=y;
-        }
-    }
-
-    private void moveToTheTop() {
-        if(Gdx.input.isKeyPressed(Input.Keys.S))
-        {
-            y-= CARACTER_SPEED *Gdx.graphics.getDeltaTime();
-        }
-        else
-        {
-            y=y;
-        }
-    }
 
     private boolean moveTotheLeft() {
         if(Gdx.input.isKeyPressed(Input.Keys.A))
         {
-            if(x>300)
+            if(mainCaracter.getX()>300)
             {
-                x-= CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+                xMainCaracter -=CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+                mainCaracter.setX(xMainCaracter);
             }
             return true;
         }
         else
         {
-            x=x;
             return false;
         }
     }
@@ -248,15 +265,15 @@ public class MainGameScreen implements Screen {
     private boolean moveToTheRight() {
         if(Gdx.input.isKeyPressed(Input.Keys.D))
         {
-            if(x<1300)
+            if(mainCaracter.getX()<1300)
             {
-                x+= CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+                xMainCaracter +=CARACTER_SPEED *Gdx.graphics.getDeltaTime();
+                mainCaracter.setX(xMainCaracter);
             }
             return true;
         }
         else
         {
-            x=x;
             return false;
         }
     }

@@ -2,11 +2,10 @@ package bzh.enib.game;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import java.awt.*;
 
 public class BoxeGenerator extends ItemGenerator {
 
-    private static final int BOXE_WITDH =50;
+    private static final int BOXE_WITDH = 50;
     private static final int BOXE_HEIGHT =50;
 
     public BoxeGenerator()
