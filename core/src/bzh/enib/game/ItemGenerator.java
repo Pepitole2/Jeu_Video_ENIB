@@ -1,13 +1,13 @@
 package bzh.enib.game;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
-import java.awt.*;
 
 public class ItemGenerator {
 
     private Texture texture;
-    private Rectangle collision;
+    public Rectangle collision;
     private int width, height;
     private int x,y;
 
@@ -17,12 +17,10 @@ public class ItemGenerator {
         this.height = height;
         this.x =x;
         this.y =y;
-        this.collision = new Rectangle();
-        collision.x = x;
-        collision.y =y;
-        collision.width = width;
-        collision.height = height;
+        this.collision = new Rectangle(x,y,width,height);
     }
+
+
 
     public Texture getTexture() {
         return texture;

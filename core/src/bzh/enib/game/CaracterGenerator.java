@@ -9,6 +9,7 @@ public class CaracterGenerator {
     private int x,y;
     private int width,height;
     private int health,thirst,radiation;
+    public Rectangle collisionRectangle;
     public RectangleGenetator healthBare;
 
     public CaracterGenerator(){
@@ -21,6 +22,7 @@ public class CaracterGenerator {
         this.health = 200;
         this.thirst=100;
         this.radiation=100;
+        collisionRectangle = new Rectangle(x,y,width,height);
         this.healthBare =  new RectangleGenetator(100,850,health,20, Color.GREEN);
     }
 

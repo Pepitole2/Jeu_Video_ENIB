@@ -95,6 +95,17 @@ public class MainGameScreen implements Screen {
             game.setScreen(new MainMenuScreen(game));
         }
 
+        if(mainCaracter.collisionRectangle.overlaps(boxetest.collision)){
+            mainCaracter.takeDamage(1);
+            mainCaracter.healthBare.setWidth(mainCaracter.getHealth());
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.P)){
+            System.out.println(boxetest.collision);
+            System.out.println(mainCaracter.collisionRectangle);
+        }
+
+
     }
 
     private void testTakeCareTakeDamage() {
@@ -128,6 +139,7 @@ public class MainGameScreen implements Screen {
         {
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
         }else if(isOnTheLeftBorder()) {
+           // boxetest.setX(floatVa);  Faire les collisions de la boxe
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX()+CARACTER_SPEED*Gdx.graphics.getDeltaTime(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
         }else if(isOnTheRightBorder()){
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX()-CARACTER_SPEED*Gdx.graphics.getDeltaTime(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
@@ -253,6 +265,7 @@ public class MainGameScreen implements Screen {
             {
                 xMainCaracter -=CARACTER_SPEED *Gdx.graphics.getDeltaTime();
                 mainCaracter.setX(xMainCaracter);
+                mainCaracter.collisionRectangle.setX(xMainCaracter);
             }
             return true;
         }
@@ -269,6 +282,7 @@ public class MainGameScreen implements Screen {
             {
                 xMainCaracter +=CARACTER_SPEED *Gdx.graphics.getDeltaTime();
                 mainCaracter.setX(xMainCaracter);
+                mainCaracter.collisionRectangle.setX(xMainCaracter);
             }
             return true;
         }
