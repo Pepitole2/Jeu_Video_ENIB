@@ -139,9 +139,10 @@ public class MainGameScreen implements Screen {
         {
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
         }else if(isOnTheLeftBorder()) {
-           // boxetest.setX(floatVa);  Faire les collisions de la boxe
+            boxetest.collision.setX(FirstPlanX+boxetest.getX());
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX()+CARACTER_SPEED*Gdx.graphics.getDeltaTime(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
         }else if(isOnTheRightBorder()){
+            boxetest.collision.setX(FirstPlanX+boxetest.getX());
             game.batch.draw(boxetest.getTexture(),FirstPlanX+boxetest.getX()-CARACTER_SPEED*Gdx.graphics.getDeltaTime(),boxetest.getY(),boxetest.getWidth(),boxetest.getHeight());
         }
     }
