@@ -5,7 +5,7 @@ Bienvenu sur le git de notre Jeu Video Enib.
 
 Lancer le projet :
 
-Il suffit d'importer le git sur un IDE Java (Eclipse oi Intellij).
+Il suffit d'importer le git sur un IDE Java (Eclipse ou Intellij).
 Il faut aussi importer le fichier Asset avec ce lien :
 - https://drive.google.com/drive/folders/1WiizJWsqVv8dDA5O7HlGKLhnOtYf-hmV?usp=sharing
 Et rajouter ce fichier avec les autres.
